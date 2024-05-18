@@ -1,5 +1,6 @@
 package com.example.demo.product;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,10 +37,24 @@ public class ProductController {
         productService.addNewProduct(product);
     }
 
+    // DELETE method
+    // DELETE is used to delete selected items from the database
     @DeleteMapping("{productId}")
     public void deleteProduct(@PathVariable("productId") Long productId) {
-        productService.deleteStudent(productId);
+        productService.deleteProduct(productId);
     }
+
+    // PUT method
+    // PUT is used to update an item in the database
+    @PutMapping("{productId}")
+    public void updateProduct(@PathVariable("productId") Long productId,
+                              @RequestParam(required = false) String name,
+                              @RequestParam(required = false) String description,
+                              @RequestParam(required = false) String category
+                              ){
+        productService.updateProduct(productId, name, description, category);
+    }
+
 
 
 }

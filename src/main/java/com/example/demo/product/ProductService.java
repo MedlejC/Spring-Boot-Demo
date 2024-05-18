@@ -1,5 +1,6 @@
 package com.example.demo.product;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,12 +38,33 @@ public class ProductService {
         System.out.println(product);
     }
 
-    public void deleteStudent(Long productId) {
+    public void deleteProduct(Long productId) {
         boolean idExists = productRepository.existsById(productId);
         if(!idExists){
             throw new IllegalStateException("Product with ID " + productId + " does not exist in the database!");
         }
         // Delete the selected product
         productRepository.deleteById(productId);
+    }
+
+    @Transactional
+    // @Transactional annotation:
+    // I can use the setters from my entities to check whether I can or cannot update the selected item.
+    // If I can update, I use the setters to automatically update the entities in the database.
+    public void updateProduct(Long productId, String name, String description, String category) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalStateException(
+                "Product with ID " + productId + " does not exist in the database!")
+        );
+        if(name != null){
+            Optional<Product> productOptional = productRepository.findProductByName(name);
+            if(productOptional.isPresent()){
+                throw new IllegalStateException("Product already exists!");
+            }
+            product.setName(name);
+        }
+        if(description != null)
+            product.setDescription(description);
+        if(category != null)
+            product.setCategory(category);
     }
 }
