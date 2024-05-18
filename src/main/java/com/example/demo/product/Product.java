@@ -1,12 +1,17 @@
 package com.example.demo.product;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+@Entity // This maps the Product class to the database medlejstore
+@Table // Used for the table in the database medlejstore
 public class Product {
     // This Product class is the model for Products Management
 
 
     // Defining Product attributes:
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
