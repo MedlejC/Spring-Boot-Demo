@@ -1,9 +1,11 @@
 package com.example.demo.product;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 // The Product Service class has to be instantiated --> It has to be annotated as a Spring Bean
 @Service
@@ -14,15 +16,24 @@ public class ProductService {
     // The API Layer will talk to the Service/Business Layer to get some data.
     // This Service/Business Layer should talk to the Data Access Layer to get data (round-trip).
 
+    private final ProductRepository productRepository;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     public List<Product> getProducts(){
-        return List.of(
-                new Product(
-                        1L,
-                        "ToolBox",
-                        "High quality plastic tool box to hold all essential items and tools.",
-                        "Boxes",
-                        LocalDateTime.now()
-                )
-        );
+       return productRepository.findAll();
+    }
+
+    public void addNewProduct(Product product) {
+        Optional<Product> productOptional = productRepository.findProductByName(product.getName());
+        if(productOptional.isPresent()){
+            throw new IllegalStateException("Product already exists!");
+        }
+        // Save the newly added product
+        productRepository.save(product);
+        System.out.println(product);
     }
 }

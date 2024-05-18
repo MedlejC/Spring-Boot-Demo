@@ -1,11 +1,8 @@
 package com.example.demo.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -25,8 +22,19 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // GET method
+    // GET is used to fetch an item from the database
     @GetMapping
     public List<Product> getProducts(){
         return productService.getProducts();
     }
+
+    // POST method
+    // POST is used to add new items to the database
+    @PostMapping
+    public void registerNewProduct(@RequestBody Product product){ // Take the Request Body and map it into a Product
+        productService.addNewProduct(product);
+    }
+
+
 }
