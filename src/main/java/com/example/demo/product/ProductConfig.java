@@ -11,7 +11,7 @@ import java.util.List;
 public class ProductConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(ProductRepository repository){ // Inject ProductRepository to have access to the repo
+    CommandLineRunner productCommandLineRunner(ProductRepository repository){ // Inject ProductRepository to have access to the repo
         return args -> {
             Product toolbox = new Product(
                     "ToolBox",
