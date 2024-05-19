@@ -3,6 +3,7 @@ package com.example.demo.sale;
 import com.example.demo.client.Client;
 import com.example.demo.product.Product;
 import com.example.demo.sale_item.SaleItem;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class Sale {
     // -----
     // cascade = CascadeType.ALL, orphanRemoval = true: Ensures that operations like save, update, and delete on Sale are cascaded to SaleItem.
     // Orphan removal is enabled so that when a SaleItem is removed from the collection, it’s automatically deleted from the database.
+    @JsonManagedReference
     private List<SaleItem> saleItems;
 
 
