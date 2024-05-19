@@ -74,7 +74,7 @@ public class ClientService {
             logger.info("Successfully updated client last name for ID: {}", clientId);
         }
 
-        if(mobile != null){
+        if(mobile != null && !mobile.isEmpty() && !mobile.equals(client.getMobile())){
             Optional<Client> clientOptional = clientRepository.findClientByMobile(mobile);
             if(clientOptional.isPresent()){
                 logger.error("Attempted to register mobile to an existing client: {}", firstName);
