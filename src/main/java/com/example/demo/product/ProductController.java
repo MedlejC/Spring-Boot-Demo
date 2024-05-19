@@ -1,8 +1,9 @@
 package com.example.demo.product;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ import java.util.List;
 public class ProductController {
     // This class serves as the API Layer for the Product class
     // & contains all the resources needed for the Product API Layer.
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     // Reference to the service layer for Product class:
     private final ProductService productService;
@@ -27,6 +30,7 @@ public class ProductController {
     // GET is used to fetch an item from the database
     @GetMapping
     public List<Product> getProducts(){
+        logger.info("Received request to get all products");
         return productService.getProducts();
     }
 
@@ -34,6 +38,7 @@ public class ProductController {
     // POST is used to add new items to the database
     @PostMapping
     public void registerNewProduct(@RequestBody Product product){ // Take the Request Body and map it into a Product
+        logger.info("Received request to add a new product: {}", product);
         productService.addNewProduct(product);
     }
 
@@ -41,6 +46,7 @@ public class ProductController {
     // DELETE is used to delete selected items from the database
     @DeleteMapping("{productId}")
     public void deleteProduct(@PathVariable("productId") Long productId) {
+        logger.info("Received request to delete product with ID: {}", productId);
         productService.deleteProduct(productId);
     }
 
@@ -52,6 +58,7 @@ public class ProductController {
                               @RequestParam(required = false) String description,
                               @RequestParam(required = false) String category
                               ){
+        logger.info("Received request to update product with ID: {}", productId);
         productService.updateProduct(productId, name, description, category);
     }
 
