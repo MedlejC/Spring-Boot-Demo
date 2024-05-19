@@ -38,4 +38,24 @@ public class ClientController {
         logger.info("Received request to add a new client: {}", client);
         clientService.addNewClient(client);
     }
+
+    // DELETE method
+    // DELETE is used to delete selected clients from the database
+    @DeleteMapping("{clientId}")
+    public void deleteClient(@PathVariable("clientId") Long clientId){
+        logger.info("Received request to delete client with ID: {}", clientId);
+        clientService.deleteClient(clientId);
+    }
+
+    // PUT method
+    // PUT is used to update a client in the database
+    @PutMapping("{clientId}")
+    public void updateProduct(@PathVariable("clientId") Long clientId,
+                              @RequestParam(required = false) String firstName,
+                              @RequestParam(required = false) String lastName,
+                              @RequestParam(required = false) String mobile
+                              ){
+        logger.info("Received request to update client with ID: {}", clientId);
+        clientService.updateClient(clientId, firstName, lastName, mobile);
+    }
 }
