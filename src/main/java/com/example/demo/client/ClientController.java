@@ -50,7 +50,7 @@ public class ClientController {
     // PUT method
     // PUT is used to update a client in the database
     @PutMapping("{clientId}")
-    public void updateProduct(@PathVariable("clientId") Long clientId,
+    public void updateClient(@PathVariable("clientId") Long clientId,
                               @RequestParam(required = false) String firstName,
                               @RequestParam(required = false) String lastName,
                               @RequestParam(required = false) String mobile
