@@ -153,7 +153,7 @@ The application offers RESTful API endpoints grouped by functionality for managi
 **Example Usage with Postman:**
 - Creating a Product
 ![image](https://github.com/MedlejC/Spring-Boot-Demo/assets/127014173/244d842a-0240-4cc2-b130-90f4cfeb43f3)
-Changes are immediatly reflected on the endpoints.
+Changes are immediately reflected on the endpoints.
 
 ## Screenshots and Demos
 
