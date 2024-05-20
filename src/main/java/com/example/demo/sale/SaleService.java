@@ -1,6 +1,7 @@
 package com.example.demo.sale;
 
-import com.example.demo.sale_item.SaleItemRepository;
+import com.example.demo.product.Product;
+import com.example.demo.product.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,12 @@ public class SaleService {
 
     private static final Logger logger = LoggerFactory.getLogger(SaleService.class);
     private final SaleRepository saleRepository;
-    private final SaleItemRepository saleItemRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public SaleService(SaleRepository saleRepository, SaleItemRepository saleItemRepository){
+    public SaleService(SaleRepository saleRepository, ProductRepository productRepository){
         this.saleRepository = saleRepository;
-        this.saleItemRepository = saleItemRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Sale> getSales(){
@@ -35,9 +36,10 @@ public class SaleService {
     @Transactional
     public Sale addNewSale(Sale sale){
         logger.info("Adding new sale: {}", sale);
-        sale.getSaleItems().forEach(item -> {
-            item.setSale(sale);
-            saleItemRepository.save(item);
+        // Associate and save each product with the new sale
+        sale.getProducts().forEach(product -> {
+            product.setSale(sale); // Set the sale for each product
+            productRepository.save(product); // Save each product to update the sale association
         });
         return saleRepository.save(sale);
     }
@@ -45,30 +47,54 @@ public class SaleService {
 
     public void deleteSale(Long saleId) {
         logger.info("Deleting sale with ID: {}", saleId);
-        if(!saleRepository.existsById(saleId)){
-            logger.error("Sale with ID {} not found", saleId);
-            throw new IllegalStateException("Sale with ID " + saleId + " does not exist.");
-        }
-        saleRepository.deleteById(saleId);
+        Sale sale = saleRepository.findById(saleId).orElseThrow(() -> new IllegalStateException("Sale with ID " + saleId + " does not exist."));
+        sale.getProducts().forEach(product -> {
+            product.setSale(null);
+            productRepository.save(product);
+        });
+        saleRepository.delete(sale);
     }
 
     @Transactional
     public Sale updateSale(Long saleId, Sale updatedSale) {
         logger.info("Updating sale with ID: {}", saleId);
-        return saleRepository.findById(saleId).map(sale -> {
-            sale.setCreationDate(updatedSale.getCreationDate());
-            sale.setTotal(updatedSale.getTotal());
-            sale.setClient(updatedSale.getClient());
-            sale.setSeller(updatedSale.getSeller());
+        Sale sale = saleRepository.findById(saleId).orElseThrow(() -> new IllegalStateException("Sale with ID " + saleId + " does not exist."));
+        // Unlink old products if necessary
+        sale.getProducts().forEach(product -> {
+            product.setSale(null);
+            productRepository.save(product);
+        });
 
-            // Clear existing items and add updated ones:
-            saleItemRepository.deleteAll(sale.getSaleItems()); // Removes old items
-            updatedSale.getSaleItems().forEach(item -> {
-                item.setSale(sale); // Sets the sale for each new item
-                saleItemRepository.save(item);
-            });
-            sale.setSaleItems(updatedSale.getSaleItems());
-            return saleRepository.save(sale);
-        }).orElseThrow(() -> new IllegalStateException("Sale with ID " + saleId + " does not exist."));
+        // Link new products
+        updatedSale.getProducts().forEach(product -> {
+            product.setSale(sale);
+            productRepository.save(product);
+        });
+
+        sale.setProducts(updatedSale.getProducts());
+        sale.setTotal(updatedSale.getTotal());
+        sale.setCreationDate(updatedSale.getCreationDate());
+        sale.setClient(updatedSale.getClient());
+        sale.setSeller(updatedSale.getSeller());
+
+        return saleRepository.save(sale);
+
+//        sale.setCreationDate(updatedSale.getCreationDate());
+//        sale.setTotal(updatedSale.getTotal());
+//        sale.setClient(updatedSale.getClient());
+//        sale.setSeller(updatedSale.getSeller());
+//
+//        // Update products relationship
+//        sale.getProducts().forEach(product -> {
+//            product.setSale(null);
+//            productRepository.save(product);
+//        });
+//        updatedSale.getProducts().forEach(product -> {
+//            product.setSale(sale);
+//            productRepository.save(product);
+//        });
+//        sale.setProducts(updatedSale.getProducts());
+//
+//        return saleRepository.save(sale);
     }
 }

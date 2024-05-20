@@ -2,8 +2,8 @@ package com.example.demo.sale;
 
 import com.example.demo.client.Client;
 import com.example.demo.product.Product;
-import com.example.demo.sale_item.SaleItem;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -31,14 +31,17 @@ public class Sale {
 //    )
 //    private Set<Product> products;
 
-    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
-    // This annotation specifies that each Sale can have multiple SaleItem entries.
-    // The mappedBy attribute points to the sale field in the SaleItem class, which is the back-reference to the Sale.
-    // -----
-    // cascade = CascadeType.ALL, orphanRemoval = true: Ensures that operations like save, update, and delete on Sale are cascaded to SaleItem.
-    // Orphan removal is enabled so that when a SaleItem is removed from the collection, it’s automatically deleted from the database.
-    @JsonManagedReference
-    private List<SaleItem> saleItems;
+//    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
+//    // This annotation specifies that each Sale can have multiple SaleItem entries.
+//    // The mappedBy attribute points to the sale field in the SaleItem class, which is the back-reference to the Sale.
+//    // -----
+//    // cascade = CascadeType.ALL, orphanRemoval = true: Ensures that operations like save, update, and delete on Sale are cascaded to SaleItem.
+//    // Orphan removal is enabled so that when a SaleItem is removed from the collection, it’s automatically deleted from the database.
+//    @JsonManagedReference
+//    private List<SaleItem> saleItems;
+
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Product> products;
 
 
     // Constructors
@@ -49,22 +52,32 @@ public class Sale {
     }
 
     // Constructor #2: Contains all the attributes
-    public Sale(Long id, LocalDateTime creationDate, Double total, String seller, Client client, List<SaleItem> saleItems) {
+    public Sale(Long id, LocalDateTime creationDate, Double total, String seller, Client client, List<Product> products) {
         this.id = id;
         this.creationDate = creationDate;
         this.total = total;
         this.seller = seller;
         this.client = client;
-        this.saleItems = saleItems;
+        this.products = products;
+
     }
 
     // Constructor #3: With no ID (because the database will generate the ID for us)
-    public Sale(LocalDateTime creationDate, Double total, String seller, Client client, List<SaleItem> saleItems) {
+    public Sale(LocalDateTime creationDate, Double total, String seller, Client client, List<Product> products) {
         this.creationDate = creationDate;
         this.total = total;
         this.seller = seller;
         this.client = client;
-        this.saleItems = saleItems;
+        this.products = products;
+
+    }
+
+    // Constructor #4: With no ID & products (because the database will generate and assign them for us)
+    public Sale(LocalDateTime creationDate, Double total, String seller, Client client) {
+        this.creationDate = creationDate;
+        this.total = total;
+        this.seller = seller;
+        this.client = client;
     }
 
     // Getters & Setters
@@ -109,15 +122,25 @@ public class Sale {
         this.seller = seller;
     }
 
-    public List<SaleItem> getSaleItems() {
-        return saleItems;
+//    public List<SaleItem> getSaleItems() {
+//        return saleItems;
+//    }
+//
+//    public void setSaleItems(List<SaleItem> saleItems) {
+//        this.saleItems = saleItems;
+//    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setSaleItems(List<SaleItem> saleItems) {
-        this.saleItems = saleItems;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
+
 
 // toString method:
+
 
     @Override
     public String toString() {
@@ -127,7 +150,7 @@ public class Sale {
                 ", total=" + total +
                 ", seller='" + seller + '\'' +
                 ", client=" + client +
-                ", saleItems=" + saleItems +
+                ", products=" + products +
                 '}';
     }
 }

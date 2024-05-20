@@ -1,6 +1,8 @@
 package com.example.demo.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,37 +31,41 @@ public class ProductController {
     // GET method
     // GET is used to fetch an item from the database
     @GetMapping
-    public List<Product> getProducts(){
+    public ResponseEntity<List<Product>> getProducts() {
         logger.info("Received request to get all products");
-        return productService.getProducts();
+        return ResponseEntity.ok(productService.getProducts()); // Returns a list of products with a 200 OK status
     }
 
     // POST method
     // POST is used to add new items to the database
     @PostMapping
-    public void registerNewProduct(@RequestBody Product product){ // Take the Request Body and map it into a Product
+    public ResponseEntity<Product> registerNewProduct(@RequestBody Product product) { // Take the Request Body and map it into a Product
         logger.info("Received request to add a new product: {}", product);
-        productService.addNewProduct(product);
+        Product createdProduct = productService.addNewProduct(product);
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);  // Return a 201 Created status to indicate successful creation
     }
 
     // DELETE method
     // DELETE is used to delete selected items from the database
-    @DeleteMapping("{productId}")
-    public void deleteProduct(@PathVariable("productId") Long productId) {
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         logger.info("Received request to delete product with ID: {}", productId);
         productService.deleteProduct(productId);
+        return ResponseEntity.ok().build();  // Return a 200 OK status to indicate successful deletion
     }
-
     // PUT method
     // PUT is used to update an item in the database
-    @PutMapping("{productId}")
-    public void updateProduct(@PathVariable("productId") Long productId,
-                              @RequestParam(required = false) String name,
-                              @RequestParam(required = false) String description,
-                              @RequestParam(required = false) String category
-                              ){
+    @PutMapping("/{productId}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long productId,
+                                                 @RequestParam(required = false) String name,
+                                                 @RequestParam(required = false) String description,
+                                                 @RequestParam(required = false) String category,
+                                                 @RequestParam(required = false) Long saleId,
+                                                 @RequestParam(required = false) Integer quantity,
+                                                 @RequestParam(required = false) Double price) {
         logger.info("Received request to update product with ID: {}", productId);
-        productService.updateProduct(productId, name, description, category);
+        Product updatedProduct = productService.updateProduct(productId, name, description, category, saleId, quantity, price);
+        return ResponseEntity.ok(updatedProduct);  // Return the updated product with a 200 OK status
     }
 
 

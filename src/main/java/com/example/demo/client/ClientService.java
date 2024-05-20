@@ -31,15 +31,16 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
-    public void addNewClient(Client client){
+    @Transactional
+    public Client addNewClient(Client client){
         logger.info("Attempting to add a new client: {}", client);
         Optional<Client> clientOptional = clientRepository.findClientByMobile(client.getMobile());
         if(clientOptional.isPresent()){
             logger.error("Attempted to add a duplicate client (by mobile): {}", client);
-            throw new IllegalStateException("Client already exists!");
+            throw new IllegalStateException("Client with mobile " + client.getMobile() + " already exists!");
         }
-        clientRepository.save(client);
         logger.info("Successfully added client: {}", client);
+        return clientRepository.save(client);
     }
 
     public void deleteClient(Long clientId){
@@ -64,17 +65,17 @@ public class ClientService {
             return new IllegalStateException("Client with ID " + clientId + " does not exist in the database!");
         });
 
-        if(firstName != null){
+        if (firstName != null && !firstName.isEmpty()) {
             client.setFirstName(firstName);
             logger.info("Successfully updated client first name for ID: {}", clientId);
         }
 
-        if(lastName != null){
+        if (lastName != null && !lastName.isEmpty()) {
             client.setLastName(lastName);
             logger.info("Successfully updated client last name for ID: {}", clientId);
         }
 
-        if(mobile != null && !mobile.isEmpty() && !mobile.equals(client.getMobile())){
+        if (mobile != null && !mobile.equals(client.getMobile())) {
             Optional<Client> clientOptional = clientRepository.findClientByMobile(mobile);
             if(clientOptional.isPresent()){
                 logger.error("Attempted to register mobile to an existing client: {}", firstName);

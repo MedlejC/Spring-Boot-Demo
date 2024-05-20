@@ -31,15 +31,16 @@ public class SaleController {
     // GET method
     // GET is used to fetch a sale from the database
     @GetMapping
-    public List<Sale> getSales(){
+    public ResponseEntity<List<Sale>> getSales() {
         logger.info("Received request to get all sales");
-        return saleService.getSales();
+        List<Sale> sales = saleService.getSales();
+        return ResponseEntity.ok(sales);
     }
 
     // POST method
     // POST is used to add new items to the database
     @PostMapping
-    public ResponseEntity<?> registerNewSale(@RequestBody Sale sale){ // Take the Request Body and map it into a sale object
+    public ResponseEntity<Sale> registerNewSale(@RequestBody Sale sale){ // Take the Request Body and map it into a sale object
         logger.info("Received request to add a new sale: {}", sale);
         Sale createdSale = saleService.addNewSale(sale);
         return ResponseEntity.ok(createdSale);
@@ -60,7 +61,7 @@ public class SaleController {
     }
 
     @PutMapping("{saleId}")
-    public ResponseEntity<?> updateSale(
+    public ResponseEntity<Sale> updateSale(
             @PathVariable("saleId") Long saleId,
             @RequestBody Sale updatedSale
             ){
