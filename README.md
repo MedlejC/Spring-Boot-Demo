@@ -65,8 +65,9 @@ This Spring Boot application is designed to manage products within a retail cont
 	echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp 
 	echo  'export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin' >> ~/.zshrc 
 	source ~/.zshrc
-These commands were used to add PostgreSQL commands to the system path, enabling the use of PostgreSQL's command line tools directly from the terminal.  
-Examples:
+These commands were used to add PostgreSQL commands to the system path, enabling the use of PostgreSQL's command line tools directly from the terminal. 
+
+**Examples:**
 - ```bash
   psql
 &emsp;&emsp;![image](https://github.com/MedlejC/Spring-Boot-Demo/assets/127014173/cae2140d-10ee-4ad7-ba76-b1dc1e9b034d)
