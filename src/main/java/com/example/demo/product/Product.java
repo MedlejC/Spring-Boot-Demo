@@ -1,5 +1,9 @@
 package com.example.demo.product;
 
+import com.example.demo.sale.Sale;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +22,20 @@ public class Product {
     private String category;
     private LocalDateTime creation_date;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_id") // foreign key in Product table pointing to Sale
+    @JsonIgnore
+    private Sale sale;
+
+    @Transient  // This field is not persisted, it's just used for serialization
+    @JsonProperty("saleId")  // This annotation specifies the JSON field name
+    public Long getSaleId() {
+        return (this.sale != null ? this.sale.getId() : null);
+    }
+
+    private int quantity;
+    private double price;
+
     // Constructors
 
     // Constructor #1: No-Arg constructor
@@ -29,23 +47,37 @@ public class Product {
                    String name,
                    String description,
                    String category,
-                   LocalDateTime creation_date) {
+                   LocalDateTime creation_date,
+                   Sale sale,
+                   int quantity,
+                   double price
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.category = category;
         this.creation_date = creation_date;
+        this.sale = sale;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     // Constructor #3: With no ID (because the database will generate the ID for us)
     public Product(String name,
                    String description,
                    String category,
-                   LocalDateTime creation_date) {
+                   LocalDateTime creation_date,
+                   Sale sale,
+                   int quantity,
+                   double price
+                   ) {
         this.name = name;
         this.description = description;
         this.category = category;
         this.creation_date = creation_date;
+        this.sale = sale;
+        this.quantity = quantity;
+        this.price = price;
     }
 
 
@@ -91,8 +123,31 @@ public class Product {
         this.creation_date = creation_date;
     }
 
+    public Sale getSale() {
+        return sale;
+    }
 
+    public void setSale(Sale sale) {
+        this.sale = sale;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
     // toString method:
+
 
     @Override
     public String toString() {
@@ -102,6 +157,9 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", category='" + category + '\'' +
                 ", creation_date=" + creation_date +
+                ", sale=" + sale +
+                ", quantity=" + quantity +
+                ", price=" + price +
                 '}';
     }
 }
