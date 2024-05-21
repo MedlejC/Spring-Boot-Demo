@@ -55,6 +55,7 @@ This Spring Boot application is designed to manage products within a retail cont
 **Setting Up Spring Boot:**
 -   Spring Boot setup involved initializing a new Spring Boot project via the Spring Initializr, available at [https://start.spring.io/](https://start.spring.io/). The project was configured as follows:
 <img width="468" alt="image" src="https://github.com/MedlejC/Spring-Boot-Demo/assets/127014173/3ab48cd3-abae-494d-90c2-2435a60ab9b6">
+<br></br
 
 **Configuring PostgreSQL on macOS:**
 
@@ -151,16 +152,14 @@ The application offers RESTful API endpoints grouped by functionality for managi
     Removes a sale by ID.
 
 **Example Usage with Postman:**
-- Creating a Product
+- Creating a Product:
 ![image](https://github.com/MedlejC/Spring-Boot-Demo/assets/127014173/244d842a-0240-4cc2-b130-90f4cfeb43f3)
 Changes are immediately reflected on the endpoints.
-
-## Screenshots and Demos
-
-
-
+<br></br>
+- Updating a Product:  
+  PUT request to: `http://localhost:8080/api/product/{product_id}?{attribute1}={value1}&{attribute2}={value2}`  
+  Example: `http://localhost:8080/api/product/5?name=PostmanPUT&description=Hello From Postman&price=19.99`  
+  This targets the product with id = 5, and updates its name, description and price to the values set.
+  ![image](https://github.com/MedlejC/Spring-Boot-Demo/assets/127014173/df892e24-993c-4e63-9a29-cb02f608b628)
+  Changes are immediately reflected on the endpoints.
   
-
-## Challenges and Accomplishments
-
-## Future Work
