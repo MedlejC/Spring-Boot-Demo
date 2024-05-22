@@ -79,22 +79,5 @@ public class SaleService {
 
         return saleRepository.save(sale);
 
-//        sale.setCreationDate(updatedSale.getCreationDate());
-//        sale.setTotal(updatedSale.getTotal());
-//        sale.setClient(updatedSale.getClient());
-//        sale.setSeller(updatedSale.getSeller());
-//
-//        // Update products relationship
-//        sale.getProducts().forEach(product -> {
-//            product.setSale(null);
-//            productRepository.save(product);
-//        });
-//        updatedSale.getProducts().forEach(product -> {
-//            product.setSale(sale);
-//            productRepository.save(product);
-//        });
-//        sale.setProducts(updatedSale.getProducts());
-//
-//        return saleRepository.save(sale);
     }
 }

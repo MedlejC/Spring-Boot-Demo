@@ -2,13 +2,12 @@ package com.example.demo.sale;
 
 import com.example.demo.client.Client;
 import com.example.demo.product.Product;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 public class Sale {
@@ -23,23 +22,11 @@ public class Sale {
     @JoinColumn(name = "client_id", nullable = false) // Used to specify which column in the Sale table should be used as a foreign key to reference the Client
     private Client client;
 
-//    @ManyToMany // many-to-many relationship between Sale and Product
-//    @JoinTable( // specifies the table that links Sale and Product entities together, along with the join columns (sale_id and product_id)
-//            name = "sale_products",
-//            joinColumns = @JoinColumn(name = "sale_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    private Set<Product> products;
 
-//    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
-//    // This annotation specifies that each Sale can have multiple SaleItem entries.
-//    // The mappedBy attribute points to the sale field in the SaleItem class, which is the back-reference to the Sale.
+//    // This annotation specifies that each Sale can have multiple Product entries.
+//    // The mappedBy attribute points to the sale field in the Product class, which is the back-reference to the Sale.
 //    // -----
-//    // cascade = CascadeType.ALL, orphanRemoval = true: Ensures that operations like save, update, and delete on Sale are cascaded to SaleItem.
-//    // Orphan removal is enabled so that when a SaleItem is removed from the collection, it’s automatically deleted from the database.
-//    @JsonManagedReference
-//    private List<SaleItem> saleItems;
-
+//    // cascade = CascadeType.ALL: Ensures that operations like save, update, and delete on Sale are cascaded to SaleItem.
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Product> products;
 
